@@ -3,6 +3,6 @@
   <feature name="myFeature" version="1.0">
     <bundle>mvn:valeri.blog.examples/karaf-wrap/1.0</bundle>
     <bundle>mvn:commons-codec/commons-codec/1.4</bundle>
-    <bundle>wrap:mvn:commons-beanutils/commons-beanutils-core/1.8.3,mvn:valeri.example/karaf-wrap/1.0/bnd/commons-beanutils-core-1.8.3</bundle>
+    <bundle>wrap:mvn:commons-beanutils/commons-beanutils-core/1.8.3,mvn:valeri.blog.examples/karaf-wrap/1.0/bnd/commons-beanutils-core-1.8.3</bundle>
   </feature>
 </features>
