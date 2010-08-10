@@ -3,14 +3,14 @@
 
   <groupId>valeri.blog.examples</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>pom</packaging>
   <name>Blog Examples :: Parent</name>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/parent/trunk</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/parent/trunk</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
+    <connection>scm:svn:svn:https://davidvaleri.googlecode.com/svn/projects/parent/tags/parent-1.0</connection>
+    <developerConnection>scm:svn:svn:https://davidvaleri.googlecode.com/svn/projects/parent/tags/parent-1.0</developerConnection>
+    <url>scm:svn:svn:https://davidvaleri.googlecode.com/svn/projects/parent/tags/parent-1.0</url>
   </scm>
 
   <distributionManagement>
