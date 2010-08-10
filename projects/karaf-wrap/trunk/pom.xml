@@ -1,17 +1,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>valeri.example</groupId>
+  <parent>
+    <groupId>valeri.blog.examples</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0</version>
+  </parent>
+  
   <artifactId>karaf-wrap</artifactId>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
-  <name>Karaf Wrap Example</name>
+  <name>Blog Examples :: Karaf Wrap</name>
   
   <properties>
     <commons-beanutils-version>1.8.3</commons-beanutils-version>
     <commons-codec-version>1.4</commons-codec-version>
     <felix-version>2.0.1</felix-version>
   </properties>
+  
+  <repositories>
+    <repository>
+      <id>davidvaleri</id>
+      <name>David Valeri's Blog Repo</name>
+      <url>https://davidvaleri.googlecode.com/svn/repo/</url>
+    </repository>
+  </repositories>
+  
+  <scm>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/karaf-wrap/trunk</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/karaf-wrap/trunk</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
+  </scm>
   
   <dependencies>
     <dependency>
@@ -34,39 +53,6 @@
       </resource>
     </resources>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireMavenVersion>
-                  <!-- 2.1-SNAPSHOT or 3.0-SNAPSHOT is the version reported by M2Eclipse
-                       0.9.8.200905041414 and 0.10.0... when importing a new project.  The embedded Maven 
-                       cannot be overriden during this step so we must allow this version or one cannot
-                       import the project using M2Eclipse. -->
-                  <version>[2.1-SNAPSHOT],[2.2.1],[3.0-SNAPSHOT]</version>
-                </requireMavenVersion>
-                <requireJavaVersion>
-                  <version>[1.5.0,1.7.0)</version>
-                </requireJavaVersion>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>

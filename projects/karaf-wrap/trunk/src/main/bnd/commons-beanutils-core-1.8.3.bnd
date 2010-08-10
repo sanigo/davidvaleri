@@ -1,3 +1,5 @@
+Bundle-Version: 1.8.3
+Bundle-Name: Commons BeanUtils Core
 Export-Package:\
  org.apache.commons.beanutils; version="1.8.3"; uses:="org.apache.commons.logging,org.apache.commons.beanutils.expression,org.apache.commons.beanutils.converters,org.apache.commons.collections",\
  org.apache.commons.beanutils.converters; version="1.8.3"; uses:="org.apache.commons.beanutils,org.apache.commons.logging",\
