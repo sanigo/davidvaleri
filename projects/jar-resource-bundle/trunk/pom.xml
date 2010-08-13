@@ -5,7 +5,7 @@
   <groupId>valeri.blog</groupId>
   <artifactId>jar-resource-bundle</artifactId>
   <name>David Valeri's Blog :: JAR Resource Bundle</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <inceptionYear>2010</inceptionYear>
 
   <licenses>
@@ -22,9 +22,9 @@
   </organization>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/jar-resource-bundle</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/jar-resource-bundle</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/jar-resource-bundle/tags/jar-resource-bundle-1.0</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/jar-resource-bundle/tags/jar-resource-bundle-1.0</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/tags/jar-resource-bundle-1.0</url>
   </scm>
 
   <distributionManagement>
