@@ -93,6 +93,11 @@
             <goals>
               <goal>bundle</goal>
             </goals>
+            <configuration>
+              <includes>
+                <includes>**/*.vm</includes>
+              </includes>
+            </configuration>
           </execution>
         </executions>
       </plugin>
