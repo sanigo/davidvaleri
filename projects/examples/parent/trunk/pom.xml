@@ -26,6 +26,10 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   
+  <properties>
+    <notice.used.software>See META-INF/DEPENDENCIES</notice.used.software>
+  </properties>
+  
   <name>David Valeri's Blog :: Examples :: Parent</name>
   <description>Parent POM for software developed as part of David Valeri's Blog</description>
   <inceptionYear>2010</inceptionYear>
@@ -180,11 +184,11 @@
             </goals>
             <configuration>
               <properties>
-                <notice.included.software>${notice.included.software}</notice.included.software>
-                <notice.used.software>${notice.used.software}</notice.used.software>
+                <notice-included-software>${notice.included.software}</notice-included-software>
+                <notice-used-software>${notice.used.software}</notice-used-software>
               </properties>
               <resourceBundles>
-                <resourceBundle>org.apache:apache-jar-resource-bundle:1.4</resourceBundle>
+                <resourceBundle>valeri.blog:jar-resource-bundle:1.0-SNAPSHOT</resourceBundle>
               </resourceBundles>
             </configuration>
           </execution>
