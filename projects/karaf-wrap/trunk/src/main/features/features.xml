@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010 David Valeri.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
 <features name="Karaf-Wrap-${project.version}">
   <feature name="myFeature" version="1.0">
-    <bundle>mvn:valeri.blog.examples/karaf-wrap/1.0</bundle>
+    <bundle>mvn:${project.groupId}/karaf-wrap/${project.version}</bundle>
     <bundle>mvn:commons-codec/commons-codec/1.4</bundle>
-    <bundle>wrap:mvn:commons-beanutils/commons-beanutils-core/${commons-beanutils-version},mvn:valeri.blog.examples/karaf-wrap/${project.version}/bnd/commons-beanutils-core-${commons-beanutils-version}</bundle>
+    <bundle>wrap:mvn:commons-beanutils/commons-beanutils-core/${commons-beanutils-version},mvn:${project.groupId}/karaf-wrap/${project.version}/bnd/commons-beanutils-core-${commons-beanutils-version}</bundle>
   </feature>
 </features>
