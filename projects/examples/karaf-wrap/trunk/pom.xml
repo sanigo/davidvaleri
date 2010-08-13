@@ -23,7 +23,7 @@
   </parent>
   
   <artifactId>karaf-wrap</artifactId>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>David Valeri's Blog :: Examples :: Karaf Wrap</name>
   
@@ -42,9 +42,9 @@
   </repositories>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/karaf-wrap/tags/karaf-wrap-1.0</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/karaf-wrap/tags/karaf-wrap-1.0</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/tags/karaf-wrap-1.0</url>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/karaf-wrap/trunk</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/karaf-wrap/trunk</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
   </scm>
   
   <dependencies>
