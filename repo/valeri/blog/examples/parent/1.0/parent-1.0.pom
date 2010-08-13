@@ -5,11 +5,31 @@
   <artifactId>parent</artifactId>
   <version>1.0</version>
   <packaging>pom</packaging>
-  <name>Blog Examples :: Parent</name>
+  
+  <properties>
+    <notice.used.software>See META-INF/DEPENDENCIES</notice.used.software>
+  </properties>
+  
+  <name>David Valeri's Blog :: Examples :: Parent</name>
+  <description>Parent POM for software developed as part of David Valeri's Blog</description>
+  <inceptionYear>2010</inceptionYear>
+  
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <distribution>repo</distribution>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+  
+  <organization>
+    <name>David Valeri</name>
+    <url>http://davidvaleri.wordpress.com</url>
+  </organization>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/parent/tags/parent-1.0</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/parent/tags/parent-1.0</developerConnection>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/parent/tags/parent-1.0</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/parent/tags/parent-1.0</developerConnection>
     <url>https://code.google.com/p/davidvaleri/source/browse/tags/parent-1.0</url>
   </scm>
 
@@ -73,8 +93,23 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-remote-resources-plugin</artifactId>
+          <version>1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.4.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
           <version>2.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.5</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -118,6 +153,26 @@
         <configuration>
           <releaseProfiles>release</releaseProfiles>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>process</goal>
+            </goals>
+            <configuration>
+              <properties>
+                <notice-included-software>${notice.included.software}</notice-included-software>
+                <notice-used-software>${notice.used.software}</notice-used-software>
+              </properties>
+              <resourceBundles>
+                <resourceBundle>valeri.blog:jar-resource-bundle:1.0</resourceBundle>
+              </resourceBundles>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
