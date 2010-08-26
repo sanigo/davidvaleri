@@ -1,0 +1,185 @@
+<!--
+  Copyright 2010 David Valeri.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>valeri.blog.examples</groupId>
+    <artifactId>parent</artifactId>
+    <version>2.0-SNAPSHOT</version>
+  </parent>
+  
+  <artifactId>cxf-replay</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>David Valeri's Blog :: Examples :: CXF Replay</name>
+  
+  <properties>
+    <spring.version>2.5.6</spring.version>
+    <cxf.version>2.2.10</cxf.version>
+  </properties>
+  
+  <repositories>
+    <repository>
+      <id>davidvaleri</id>
+      <name>David Valeri's Blog Repo</name>
+      <url>https://davidvaleri.googlecode.com/svn/repo/</url>
+    </repository>
+  </repositories>
+  
+  <scm>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/cxf-replay/trunk</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/cxf-replay/trunk</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
+  </scm>
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-frontend-jaxws</artifactId>
+      <version>${cxf.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-http-jetty</artifactId>
+      <version>${cxf.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-ws-addr</artifactId>
+      <version>${cxf.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-ws-security</artifactId>
+      <version>${cxf.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>./target/generated-resources/</directory>
+      </resource>
+      <resource>
+        <directory>./src/main/resources</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <!-- Download the WSDL we want to generate source code from. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <mkdir dir="./target/generated-resources/wsdl"/>
+                <!-- Get the WSDL. -->
+                <get src="https://svn.apache.org/repos/asf/cxf/tags/cxf-2.2.10/distribution/src/main/release/samples/wsdl_first/wsdl/CustomerService.wsdl" 
+                     dest="./target/generated-resources/wsdl/CustomerService.wsdl" 
+                     verbose="true"
+                     usetimestamp="true"/>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Generate the source code from the WSDL. -->
+      <plugin>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-codegen-plugin</artifactId>
+        <version>${cxf.version}</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+              <wsdlOptions>
+                <wsdlOption>
+                  <wsdl>./target/generated-resources/wsdl/CustomerService.wsdl</wsdl>
+                  <extraargs>
+                    <extraarg>-verbose</extraarg>
+                  </extraargs>
+                </wsdlOption>
+              </wsdlOptions>
+            </configuration>
+            <goals>
+              <goal>wsdl2java</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <profiles>
+    <profile>
+      <id>server</id>
+      <build>
+        <defaultGoal>process-test-classes</defaultGoal>
+        <plugins>
+          <!-- Note that this plug-in is used due to MEXEC-24 in the Maven 2 Exec Plug-in 
+               and the need to start the server in an external JVM. -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>process-test-classes</phase>
+                <configuration>
+                  <tasks>
+                    <java 
+                        classname="valeri.blog.examples.cxf_replay.CustomerServiceRunner"
+                        fork="true"
+                        classpathref="maven.test.classpath">
+                    </java>    
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
