@@ -30,6 +30,7 @@ import com.example.customerservice.CustomerType;
 import com.example.customerservice.NoSuchCustomerException;
 
 import org.apache.cxf.Bus;
+import org.apache.cxf.BusFactory;
 import org.apache.cxf.ws.addressing.AddressingPropertiesImpl;
 import org.apache.cxf.ws.addressing.ContextUtils;
 import org.apache.cxf.ws.addressing.JAXWSAConstants;
@@ -88,7 +89,7 @@ public class ReplayTest extends AbstractCustomerServiceTest {
     
     /**
      * Because we are messing with the configuration of the service during tests
-     * here, we want to set {link DirtiesContext} on each test method to ensure
+     * here, we want to set {@link DirtiesContext} on each test method to ensure
      * the next test method gets a clean configuration from Spring.  As the bus
      * that is created by default is not bound to the Spring context's lifecycle,
      * we need to ensure that it gets shutdown between tests.  
@@ -98,6 +99,8 @@ public class ReplayTest extends AbstractCustomerServiceTest {
         if (this.cxf != null) {
             try {
                 this.cxf.shutdown(true);
+                BusFactory.setDefaultBus(null);
+                BusFactory.setThreadDefaultBus(null);
             }
             catch (Exception e) {
                 // ignore

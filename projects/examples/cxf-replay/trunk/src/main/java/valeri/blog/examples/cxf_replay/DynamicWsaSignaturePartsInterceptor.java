@@ -33,7 +33,7 @@ import org.apache.ws.security.handler.WSHandlerConstants;
 
 
 /**
- * Inteceptor that can dynamically add signature coverage of WS-A headers
+ * Interceptor that can dynamically add signature coverage of WS-A headers
  * if they are present in the message.  This interceptor allows these
  * headers to always be signed when using traditional static WSS4J configuration
  * in CXF. 
@@ -114,19 +114,36 @@ public class DynamicWsaSignaturePartsInterceptor extends
         }
     }
     
+    /**
+     * Determines if the WSS4J action includes an action that would be affected
+     * by the {@link WSHandlerConstants#SIGNATURE_PARTS} configuration property.
+     * <p/>
+     * This implementation looks for the "Signature" and "SAMLTokenSigned"
+     * values. Subclasses may override this implementation to support additional
+     * action values.
+     * 
+     * @param interceptor
+     *            the interceptor to look at the configuration of
+     * 
+     * @return true if {@code interceptor} is configured in a way that this
+     *         interceptor can affect a change in the signed message content
+     */
+    protected boolean isSigning(WSS4JOutInterceptor interceptor) {
+        final String action = (String) interceptor.getProperties().get(
+                WSHandlerConstants.ACTION);
+
+        return action != null
+                && (action.contains(WSHandlerConstants.SIGNATURE)
+                        || action.contains(WSHandlerConstants.SAML_TOKEN_SIGNED));
+        // TODO UT signed with derived key is also a possibility
+    }
+    
     private void appendSignaturePart(StringBuilder builder, String part) {
         if (builder.length() != 0) {
             builder.append("; ");
         }
         
         builder.append(part);
-    }
-    
-    private boolean isSigning(WSS4JOutInterceptor interceptor) {
-        final String action = (String) interceptor.getProperties().get(
-                WSHandlerConstants.ACTION);
-        
-        return action != null && action.contains("Signature");
     }
     
     private String getSignatureParts(WSS4JOutInterceptor interceptor) {
