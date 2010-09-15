@@ -1,18 +1,3 @@
-<!--
-  Copyright 2010 David Valeri.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -23,7 +8,7 @@
   </parent>
   
   <artifactId>cxf-wsa-sig</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
   <name>David Valeri's Blog :: Examples :: CXF WS-A Signature</name>
   
@@ -41,9 +26,9 @@
   </repositories>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/cxf-wsa-sig/trunk</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/cxf-wsa-sig/trunk</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/cxf-wsa-sig/tags/cxf-wsa-sig-1.0</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/cxf-wsa-sig/tags/cxf-wsa-sig-1.0</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/tags/cxf-wsa-sig-1.0</url>
   </scm>
   
   <dependencies>
@@ -111,12 +96,9 @@
             </goals>
             <configuration>
               <tasks>
-                <mkdir dir="./target/generated-resources/wsdl"/>
+                <mkdir dir="./target/generated-resources/wsdl" />
                 <!-- Get the WSDL. -->
-                <get src="https://svn.apache.org/repos/asf/cxf/tags/cxf-2.2.10/distribution/src/main/release/samples/wsdl_first/wsdl/CustomerService.wsdl" 
-                     dest="./target/generated-resources/wsdl/CustomerService.wsdl" 
-                     verbose="true"
-                     usetimestamp="true"/>
+                <get src="https://svn.apache.org/repos/asf/cxf/tags/cxf-2.2.10/distribution/src/main/release/samples/wsdl_first/wsdl/CustomerService.wsdl" dest="./target/generated-resources/wsdl/CustomerService.wsdl" verbose="true" usetimestamp="true" />
               </tasks>
             </configuration>
           </execution>
@@ -182,11 +164,8 @@
                 <phase>process-test-classes</phase>
                 <configuration>
                   <tasks>
-                    <java 
-                        classname="valeri.blog.examples.cxf_wsa_sig.CustomerServiceRunner"
-                        fork="true"
-                        classpathref="maven.test.classpath">
-                        <arg value="classpath:valeri/blog/examples/cxf_wsa_sig/service-context.xml"/>
+                    <java classname="valeri.blog.examples.cxf_wsa_sig.CustomerServiceRunner" fork="true" classpathref="maven.test.classpath">
+                        <arg value="classpath:valeri/blog/examples/cxf_wsa_sig/service-context.xml" />
                     </java>    
                   </tasks>
                 </configuration>
