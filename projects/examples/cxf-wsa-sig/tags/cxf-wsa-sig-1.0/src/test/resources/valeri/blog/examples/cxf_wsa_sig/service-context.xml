@@ -1,0 +1,164 @@
+<!--
+  Copyright 2010 David Valeri.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:httpj="http://cxf.apache.org/transports/http-jetty/configuration"
+    xmlns:sec="http://cxf.apache.org/configuration/security"
+    xmlns:addressing="http://cxf.apache.org/ws/addressing"
+    xmlns:service="http://customerservice.example.com/"
+    xmlns:ehcache="http://www.springmodules.org/schema/ehcache"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+        http://cxf.apache.org/transports/http-jetty/configuration http://cxf.apache.org/schemas/configuration/http-jetty.xsd
+        http://cxf.apache.org/configuration/security http://cxf.apache.org/schemas/configuration/security.xsd
+        http://cxf.apache.org/ws/addressing http://cxf.apache.org/schemas/ws/addressing.xsd
+        http://www.springmodules.org/schema/ehcache http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd">
+
+  <import resource="classpath:META-INF/cxf/cxf.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-http-jetty.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-addr.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-ws-security.xml" />
+  
+  <jaxws:endpoint
+        serviceName="service:CustomerServiceService" 
+        endpointName="service:CustomerServicePort"
+        address="http://localhost:8080/services/CustomerService"
+        wsdlLocation="classpath:/wsdl/CustomerService.wsdl"
+        implementor="#defaultCustomerService">
+    <jaxws:features>
+      <bean class="org.apache.cxf.feature.LoggingFeature" />
+      <!-- Configure the WS-Addressing feature. -->
+      <addressing:addressing addressingRequired="true"
+          allowDuplicates="false"/>
+    </jaxws:features>
+    <jaxws:inInterceptors>
+      <ref bean="wss4jInInterceptor"/>
+    </jaxws:inInterceptors>
+    <jaxws:outInterceptors>
+      <ref bean="wss4jOutInterceptor"/>
+      <ref bean="dynamicWsaSignaturePartsInterceptor"/>
+    </jaxws:outInterceptors>
+    <jaxws:outFaultInterceptors>
+      <ref bean="wss4jOutInterceptor"/>
+      <ref bean="dynamicWsaSignaturePartsInterceptor"/>
+    </jaxws:outFaultInterceptors>
+    <jaxws:properties>
+      <!-- The parts of the response to sign.  Include: Body, token, 
+           timestamp at a minimum. -->
+        <entry key="signatureParts" value="{Element}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token; {Element}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp" />
+    </jaxws:properties>
+  </jaxws:endpoint>
+  
+  <bean id="dynamicWsaSignaturePartsInterceptor" class="valeri.blog.examples.cxf_wsa_sig.DynamicWsaSignaturePartsInterceptor"/>
+  
+  <!-- Configure the outbound WSS4J interceptor. -->
+  <bean id="wss4jOutInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
+    <constructor-arg>
+      <!-- The entry keys in this map are defined in org.apache.ws.security.handler.WSHandlerConstants
+           but are referenced as String literals here for brevity over the use of the util:constant element. -->
+      <map>
+        <entry key="action" value="Timestamp Signature" />
+        <!-- This is the fallback user for sig/enc if the sig/enc specific
+             properties are not set.  WSS4JOutInterceptor looks for it
+             and fails if it is not set. -->
+        <entry key="user" value="test-service-1 (test-ca-1)" />
+        
+        <!-- Timestamp TTL in seconds. -->
+        <entry key="timeToLive" value="60" />
+        
+        <!-- The certificate alias in the signature crypto config to sign
+             the message with.  The password is retrieved from the callback handler. -->
+        <entry key="signatureUser" value="test-service-1 (test-ca-1)" />
+        <!-- Signature key attachment method.  We want to put the token
+             directly in the header and not use a reference. -->
+        <entry key="signatureKeyIdentifier" value="DirectReference" />
+        <!-- Defines the property name that contains a Properties object with the desired
+             settings in it.  Better than loading a static file from the classpath when using
+             Spring. -->
+        <entry key="SignaturePropRefId" value="signatureProperties" />
+        <!-- The entry that actually contains the Properties object for
+             the signature crypto configuration.  See SignaturePropRefId. -->
+        <entry key="signatureProperties" value-ref="signatureProperties" />
+        
+        <!-- The reference to the callback handler for retrieving passwords
+             for private keys in the signature and encryption crypto configurations. -->
+        <entry key="passwordCallbackRef" value-ref="pwCallback" />
+      </map>
+    </constructor-arg>
+  </bean>
+  
+  <!-- Configure the inbound WSS4J interceptor. -->
+  <bean id="wss4jInInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+    <constructor-arg>
+      <!-- The entry keys in this map are defined in org.apache.ws.security.handler.WSHandlerConstants
+           but are referenced as String literals here for brevity over the user of util:constant element. -->
+      <map>
+        <!-- In this context these define the processors (the compliment to an action)
+             that are expected to be triggered by the messge. -->
+        <entry key="action" value="Timestamp Signature" />
+        
+        <!-- Defines the property name that contains a Properties object with the desired
+             settings in it.  Better than loading a static file from the classpath when using
+             Spring. -->
+        <entry key="SignaturePropRefId" value="signatureProperties" />
+        <!-- The entry that actually contains the Properties object for
+             the signature crypto configuration.  See SignaturePropRefId. -->
+        <entry key="signatureProperties" value-ref="signatureProperties" />
+                    
+        <!-- The reference to the callback handler for retrieving passwords
+             for private keys in the signature and encryption crypto configurations. -->
+        <entry key="passwordCallbackRef" value-ref="pwCallback" />
+      </map>
+    </constructor-arg>
+  </bean>
+  
+  
+    
+  <!-- Define a Properties object with the properties required by the 
+       org.apache.ws.security.components.crypto.Merlin WSS4j Crypto implementation.
+       This crypto config is used for signature creation and validation. -->
+  <util:properties id="signatureProperties">
+    <!-- Defines the implementation class. -->
+    <prop key="org.apache.ws.security.crypto.provider">org.apache.ws.security.components.crypto.Merlin</prop>
+    <!-- Defines the location, on the classpath, of the keystore file.  Also
+         takes URL or file path. -->
+    <prop key="org.apache.ws.security.crypto.merlin.file">test-service-1.jks</prop>
+    <!-- The type of the keystore pointed to by org.apache.ws.security.crypto.merlin.file. -->
+    <prop key="org.apache.ws.security.crypto.merlin.keystore.type">jks</prop>
+    <!-- The password for the keystore file. -->
+    <prop key="org.apache.ws.security.crypto.merlin.keystore.password">password</prop>
+  </util:properties>
+  
+  <!-- Define the generic password callback for retrieving signature private key credentials. -->
+  <bean id="pwCallback" class="valeri.blog.examples.cxf_wsa_sig.ExampleCallbackHandler">
+    <property name="signatureCredentials">
+      <util:map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="test-service-1 (test-ca-1)" value="password"/>
+      </util:map>
+    </property>
+  </bean>
+  
+  <bean
+      id="defaultCustomerService"
+      class="valeri.blog.examples.cxf_wsa_sig.DefaultCusomerService"/>          
+</beans>
