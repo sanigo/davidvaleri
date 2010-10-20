@@ -63,14 +63,14 @@
              capabilities. -->
         <sec:keyManagers>
           <sec:keyStore type="PKCS11" provider="SunPKCS11-nss-server"
-                password="Password12345!"/>
+                        password="Password12345!"/>
         </sec:keyManagers>
         <sec:trustManagers>
           <!-- In a production system, these properties would be encrypted/obfuscated using
                a library such as Jasypt (http://www.jasypt.org/) and Spring's property placeholder
                capabilities. -->
           <sec:keyStore type="PKCS11" provider="SunPKCS11-nss-server"
-                password="Password12345!"/>
+                        password="Password12345!"/>
         </sec:trustManagers>
         <sec:cipherSuitesFilter>
           <sec:include>SSL_RSA_WITH_3DES_EDE_CBC_SHA</sec:include>

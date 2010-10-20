@@ -45,14 +45,14 @@
   <!-- Define the HTTP client configuration for all target service invocations. -->
   <http:conduit name="*.http-conduit">
     <!-- Define the SSL info for the client connections. -->
-    <http:tlsClientParameters>
+    <http:tlsClientParameters secureSocketProtocol="TLS">
       <!-- Defines the identity info for the client's connection. -->
-      <sec:keyManagers keyPassword="password">
+      <sec:keyManagers>
         <!-- In a production system, these properties would be encrypted/obfuscated using
              a library such as Jasypt (http://www.jasypt.org/) and Spring's property placeholder
              capabilities. -->
         <sec:keyStore type="PKCS11" provider="SunPKCS11-nss-client"
-          password="Password12345!" />
+                      password="Password12345!" />
       </sec:keyManagers>
       <!-- Defines the trust info for the client's connection. -->
       <sec:trustManagers>
@@ -60,7 +60,7 @@
              a library such as Jasypt (http://www.jasypt.org/) and Spring's property placeholder
              capabilities. -->
         <sec:keyStore type="PKCS11" provider="SunPKCS11-nss-client"
-          password="Password12345!" />
+                      password="Password12345!" />
       </sec:trustManagers>
       <sec:cipherSuitesFilter>
           <sec:include>SSL_RSA_WITH_3DES_EDE_CBC_SHA</sec:include>
