@@ -27,9 +27,9 @@
   </repositories>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/cxf-tls-fips/trunk</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/cxf-tls-fips/trunk</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/cxf-tls-fips/branches/cxf-tls-fips-0.x</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/cxf-tls-fips/branches/cxf-tls-fips-0.x</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/branches/cxf-tls-fips-0.x</url>
   </scm>
   
   <dependencies>
@@ -148,8 +148,7 @@
               <tasks>
                 <mkdir dir="./target/generated-resources/wsdl" />
                 <!-- Get the WSDL. -->
-                <get src="https://svn.apache.org/repos/asf/cxf/tags/cxf-2.2.10/distribution/src/main/release/samples/wsdl_first/wsdl/CustomerService.wsdl"
-                     dest="./target/generated-resources/wsdl/CustomerService.wsdl" verbose="true" usetimestamp="true" />
+                <get src="https://svn.apache.org/repos/asf/cxf/tags/cxf-2.2.10/distribution/src/main/release/samples/wsdl_first/wsdl/CustomerService.wsdl" dest="./target/generated-resources/wsdl/CustomerService.wsdl" verbose="true" usetimestamp="true" />
               </tasks>
             </configuration>
           </execution>
@@ -241,11 +240,9 @@
                 <phase>process-test-classes</phase>
                 <configuration>
                   <tasks>
-                    <java classname="valeri.blog.examples.cxf_tls_fips.CustomerServiceRunner" fork="true"
-                          classpathref="maven.test.classpath"
-                          output="target/surefire-reports/valeri.blog.examples.cxf_tls_fips.CustomerServiceRunner.out">
+                    <java classname="valeri.blog.examples.cxf_tls_fips.CustomerServiceRunner" fork="true" classpathref="maven.test.classpath" output="target/surefire-reports/valeri.blog.examples.cxf_tls_fips.CustomerServiceRunner.out">
                       <arg value="classpath:valeri/blog/examples/cxf_tls_fips/service-context.xml" />
-                      <sysproperty key="javax.net.debug" value="${jsse.debug}"/>
+                      <sysproperty key="javax.net.debug" value="${jsse.debug}" />
                     </java>    
                   </tasks>
                 </configuration>
