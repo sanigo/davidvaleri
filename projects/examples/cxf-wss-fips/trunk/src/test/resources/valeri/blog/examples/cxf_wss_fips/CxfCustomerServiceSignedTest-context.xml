@@ -1,0 +1,203 @@
+<!--
+  Copyright 2010 David Valeri.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:http="http://cxf.apache.org/transports/http/configuration"
+    xmlns:sec="http://cxf.apache.org/configuration/security"
+    xmlns:service="http://customerservice.example.com/"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+        http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd
+        http://cxf.apache.org/configuration/security http://cxf.apache.org/schemas/configuration/security.xsd">
+
+  <import resource="classpath:META-INF/cxf/cxf.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-http.xml" />
+  
+  <jaxws:client
+        id="client"
+        serviceName="service:CustomerServiceService" 
+        endpointName="service:CustomerServicePort"
+        address="https://localhost:8443/services/CustomerService"
+        wsdlLocation="classpath:/wsdl/CustomerService.wsdl"
+        serviceClass="com.example.customerservice.CustomerService">
+    <jaxws:outInterceptors>
+      <ref bean="wss4jOutInterceptor"/>
+    </jaxws:outInterceptors>
+    <jaxws:inInterceptors>
+      <ref bean="wss4jInInterceptor"/>
+    </jaxws:inInterceptors>
+  </jaxws:client>
+  
+  <!-- Configure the inbound WSS4J interceptor. -->
+  <bean id="wss4jInInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+    <constructor-arg>
+      <!-- The entry keys in this map are defined in org.apache.ws.security.handler.WSHandlerConstants
+           but are referenced as String literals here for brevity over the user of util:constant element. -->
+      <map>
+        <!-- In this context these define the processors (the compliment to an action)
+             that are expected to be triggered by the messge. -->
+        <entry key="action" value="Timestamp Signature" />
+        
+        <!-- Defines the property name that contains a Properties object with the desired
+             settings in it.  Better than loading a static file from the classpath when using
+             Spring. -->
+        <entry key="SignaturePropRefId" value="cryptoProperties" />
+        <!-- The entry that actually contains the Properties object for
+             the signature crypto configuration.  See SignaturePropRefId. -->
+        <entry key="cryptoProperties" value-ref="cryptoProperties" />
+                    
+        <!-- The reference to the callback handler for retrieving passwords
+             for private keys in the signature and encryption crypto configurations. -->
+        <entry key="passwordCallbackRef" value-ref="pwCallback" />
+      </map>
+    </constructor-arg>
+  </bean>
+  
+  <bean id="wss4jOutInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
+    <constructor-arg>
+      <!-- The entry keys in this map are defined in org.apache.ws.security.handler.WSHandlerConstants
+           but are referenced as String literals here for brevity over the use of util:constant element. -->
+      <util:map key-type="java.lang.String" value-type="java.lang.Object">
+        <entry key="action" value="Timestamp Signature" />
+            
+        <!-- This is the fallback user for sig/enc if the sig/enc specific
+             properties are not set.  We shouldn't need this, but the WSS4JOutInterceptor
+             (CXF 2.2.2.2) looks for it and fails if it is not set. -->
+        <entry key="user" value="test-user-1" />
+        
+        <!-- Timestamp TTL in seconds. -->
+        <entry key="timeToLive" value="60" />
+        
+        <!-- The certificate alias in the signature crypto config to sign
+             the message with.  The password is retrieved from the callback handler. -->
+        <entry key="signatureUser" value="test-user-1" />
+        <!-- Signature key attachment method.  We want to put the token
+             directly in the header and not use a reference. -->
+        <entry key="signatureKeyIdentifier" value="DirectReference" />
+        <!-- Defines the property name that contains a Properties object with the desired
+             settings in it.  Better than loading a static file from the classpath when using
+             Spring. -->
+        <entry key="SignaturePropRefId" value="cryptoProperties" />
+        <!-- The entry that actually contains the Properties object for
+             the signature crypto configuration.  See SignaturePropRefId. -->
+        <entry key="cryptoProperties" value-ref="cryptoProperties" />
+        <!-- The parts of the response to sign.  Include: Body, 
+             token, timestamp, and addressing headers. -->
+        <entry key="signatureParts" value="{Element}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token; {Element}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp" />
+        <!-- The algorithm used to create the actual signature data. -->
+        <entry key="signatureAlgorithm" value="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+        <!-- The algorithm used to create digests of message content. -->
+        <!-- <entry key="signatureDigestAlgorithm" value="http://www.w3.org/2001/04/xmlenc#sha256"/> -->
+        <entry key="signatureDigestAlgorithm" value="http://www.w3.org/2000/09/xmldsig#sha1"/>
+
+        <!-- The reference to the callback handler for retrieving passwords
+             for private keys in the signature and encryption crypto configurations. -->
+        <entry key="passwordCallbackRef" value-ref="pwCallback" />
+      </util:map>
+    </constructor-arg>
+  </bean>
+  
+  <!-- Define a Properties object with the properties required by the 
+       org.apache.ws.security.components.crypto.Merlin WSS4j Crypto implementation.
+       This crypto config is used for signature creation and validation. -->
+  <util:properties id="cryptoProperties">
+    <!-- Defines the implementation class. -->
+    <prop key="org.apache.ws.security.crypto.provider">org.apache.ws.security.components.crypto.Merlin</prop>
+    <!-- Defines the location, on the classpath, of the keystore file.  Also
+         takes URL or file path. Not applicable when using PKCS 11. -->
+    <!-- <prop key="org.apache.ws.security.crypto.merlin.file"></prop>  -->
+    <!-- The type of the keystore pointed to by org.apache.ws.security.crypto.merlin.file. -->
+    <prop key="org.apache.ws.security.crypto.merlin.keystore.type">PKCS11</prop>
+    <!-- The crypto provider that can load the keystore. -->
+    <prop key="org.apache.ws.security.crypto.merlin.keystore.provider">SunPKCS11-nss-client</prop>
+    <!-- The password for the keystore file. -->
+    <prop key="org.apache.ws.security.crypto.merlin.keystore.password">Password12345!</prop>
+    <!-- The alias for the default private key to use.  Not required.
+    <prop key="org.apache.ws.security.crypto.merlin.keystore.alias"></prop> -->
+    <prop key="org.apache.ws.security.crypto.merlin.cert.provider"></prop>
+    <!-- If the JVM cacerts file contents should be loaded into the trust chain. -->
+    <prop key="org.apache.ws.security.crypto.merlin.load.cacerts">false</prop>
+    <!-- If the JVM cacerts file is used, the password for the file. 
+    <prop key="org.apache.ws.security.crypto.merlin.cacerts.password"></prop> -->
+  </util:properties>
+  
+  <!-- Define the generic password callback for retrieving signature private key credentials. -->
+  <bean id="pwCallback" class="valeri.blog.examples.cxf_wss_fips.ExampleCallbackHandler">
+    <property name="signatureCredentials">
+      <util:map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="test-user-1" value=""/>
+      </util:map>
+    </property>
+  </bean>
+  
+  <!-- Define the HTTP client configuration for all target service invocations. -->
+  <http:conduit name="*.http-conduit">
+    <!-- Define the SSL info for the client connections. -->
+    <http:tlsClientParameters secureSocketProtocol="TLS">
+      <!-- Defines the identity info for the client's connection. -->
+      <sec:keyManagers>
+        <!-- In a production system, these properties would be encrypted/obfuscated using
+             a library such as Jasypt (http://www.jasypt.org/) and Spring's property placeholder
+             capabilities. -->
+        <sec:keyStore type="PKCS11" provider="SunPKCS11-nss-client"
+                      password="Password12345!" />
+      </sec:keyManagers>
+      <!-- Defines the trust info for the client's connection. -->
+      <sec:trustManagers>
+        <!-- In a production system, these properties would be encrypted/obfuscated using
+             a library such as Jasypt (http://www.jasypt.org/) and Spring's property placeholder
+             capabilities. -->
+        <sec:keyStore type="PKCS11" provider="SunPKCS11-nss-client"
+                      password="Password12345!" />
+      </sec:trustManagers>
+      <sec:cipherSuitesFilter>
+          <sec:include>SSL_RSA_WITH_3DES_EDE_CBC_SHA</sec:include>
+          <sec:include>SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA</sec:include>
+          <sec:include>TLS_RSA_WITH_AES_128_CBC_SHA</sec:include>
+          <sec:include>TLS_DHE_DSS_WITH_AES_128_CBC_SHA</sec:include>
+          <sec:include>TLS_DHE_RSA_WITH_AES_128_CBC_SHA</sec:include>
+          <sec:include>TLS_RSA_WITH_AES_256_CBC_SHA</sec:include>
+          <sec:include>TLS_DHE_DSS_WITH_AES_256_CBC_SHA</sec:include>
+          <sec:include>TLS_DHE_RSA_WITH_AES_256_CBC_SHA</sec:include>
+          <!-- The suites below have been disabled due to
+               http://bugs.sun.com/view_bug.do?bug_id=6763530 -->
+          <!-- <sec:include>TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDH_RSA_WITH_AES_128_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDH_RSA_WITH_AES_256_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA</sec:include>  -->
+          <!-- <sec:include>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDH_anon_WITH_AES_128_CBC_SHA</sec:include> -->
+          <!-- <sec:include>TLS_ECDH_anon_WITH_AES_256_CBC_SHA</sec:include> -->
+        </sec:cipherSuitesFilter>
+    </http:tlsClientParameters>
+    <http:client Connection="Keep-Alive" />
+  </http:conduit>  
+</beans>
