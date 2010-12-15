@@ -8,7 +8,7 @@
   </parent>
   
   <artifactId>cxf-wss-fips</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>David Valeri's Blog :: Examples :: CXF WS-S FIPS</name>
   
@@ -34,9 +34,9 @@
   </repositories>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/cxf-wss-fips/tags/cxf-wss-fips-1.0</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/cxf-wss-fips/tags/cxf-wss-fips-1.0</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/tags/cxf-wss-fips-1.0</url>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/cxf-wss-fips/trunk</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/cxf-wss-fips/trunk</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
   </scm>
   
   <dependencies>
