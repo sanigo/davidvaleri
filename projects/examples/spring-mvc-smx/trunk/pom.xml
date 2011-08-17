@@ -9,7 +9,7 @@
   </parent>
   
   <artifactId>spring-mvc-smx</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>David Valeri's Blog :: Examples :: Spring MVC In ServiceMix</name>
   <description>Example of how to deploy a Spring MVC based WAR in ServiceMix.</description>
@@ -58,9 +58,9 @@
   </repositories>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/tags/spring-mvc-smx-1.0</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/tags/spring-mvc-smx-1.0</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/tags/spring-mvc-smx-1.0</url>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/trunk</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/trunk</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
   </scm>
   
   <build>
