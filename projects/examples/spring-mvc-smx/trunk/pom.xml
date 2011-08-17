@@ -59,6 +59,12 @@
     </repository>
   </repositories>
   
+  <scm>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/trunk</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/trunk</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
+  </scm>
+  
   <build>
     <plugins>
       <plugin>
