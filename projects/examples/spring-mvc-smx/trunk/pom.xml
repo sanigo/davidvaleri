@@ -9,7 +9,7 @@
   </parent>
   
   <artifactId>spring-mvc-smx</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>David Valeri's Blog :: Examples :: Spring MVC In ServiceMix</name>
   <description>Example of how to deploy a Spring MVC based WAR in ServiceMix.</description>
@@ -54,6 +54,11 @@
       <id>com.springsource.repository.bundles.external</id>
       <name>EBR External Release Repository</name>
       <url>http://repository.springsource.com/maven/bundles/external </url>
+    </repository>
+    <repository>
+      <id>davidvaleri</id>
+      <name>David Valeri's Blog Repo</name>
+      <url>https://davidvaleri.googlecode.com/svn/repo/</url>
     </repository>
   </repositories>
   
