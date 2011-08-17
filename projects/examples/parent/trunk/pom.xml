@@ -92,6 +92,11 @@
 	          <version>1.0</version>
 	        </dependency>
 	        <dependency>
+              <groupId>org.apache.maven.scm</groupId>
+              <artifactId>maven-scm-api</artifactId>
+              <version>1.5</version>
+            </dependency>
+	        <dependency>
 	          <groupId>org.apache.maven.scm</groupId>
 	          <artifactId>maven-scm-manager-plexus</artifactId>
 	          <version>1.5</version>
