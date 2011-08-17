@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
   <parent>
@@ -11,7 +9,7 @@
   </parent>
   
   <artifactId>spring-mvc-smx</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>war</packaging>
   <name>David Valeri's Blog :: Examples :: Spring MVC In ServiceMix</name>
   <description>Example of how to deploy a Spring MVC based WAR in ServiceMix.</description>
@@ -60,9 +58,9 @@
   </repositories>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/trunk</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/trunk</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/tags/spring-mvc-smx-1.0</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/spring-mvc-smx/tags/spring-mvc-smx-1.0</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/tags/spring-mvc-smx-1.0</url>
   </scm>
   
   <build>
