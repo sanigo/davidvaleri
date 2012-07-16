@@ -24,7 +24,7 @@
   </parent>
   
   <artifactId>camel-2.10</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>David Valeri's Blog :: Examples :: Camel 2.10</name>
   <description>Example of how to use some of the new features in Camel 2.10.0.</description>
   
@@ -68,8 +68,8 @@
   </repositories>
   
   <scm>
-    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/camel-2.10/tags/camel-2.10-1.0</connection>
-    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/camel-2.10/tags/camel-2.10-1.0</developerConnection>
-    <url>https://code.google.com/p/davidvaleri/source/browse/tags/camel-2.10-1.0</url>
+    <connection>scm:svn:http://davidvaleri.googlecode.com/svn/projects/examples/camel-2.10/trunk</connection>
+    <developerConnection>scm:svn:https://davidvaleri.googlecode.com/svn/projects/examples/camel-2.10/trunk</developerConnection>
+    <url>https://code.google.com/p/davidvaleri/source/browse/</url>
   </scm>
 </project>
