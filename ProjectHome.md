@@ -1,0 +1,1 @@
+This project contains the source code used in and referenced from the http://davidvaleri.wordpress.com blog.
