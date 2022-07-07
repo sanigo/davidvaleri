@@ -14,7 +14,7 @@
   
   <properties>
     <spring.version>2.5.6</spring.version>
-    <cxf.version>2.2.10</cxf.version>
+    <cxf.version>2.6.12</cxf.version>
   </properties>
   
   <repositories>
